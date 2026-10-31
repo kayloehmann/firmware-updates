@@ -1367,7 +1367,7 @@ __metadata:
     typescript: ~5.8.3
     typescript-eslint: ^8.43.0
     wrangler: ^4.94.0
-    zod: ^3.19.1
+    zod: ^4.6.6
     zod-to-json-schema: ^3.17.1
   languageName: unknown
   linkType: soft
@@ -5319,9 +5319,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"zod@npm:^3.19.1":
-  version: 3.19.1
-  resolution: "zod@npm:3.19.1"
-  checksum: 56e420ea5845912324a8fc61833714a2aec84954e418b52660d76502183c6e62fef9447cbfa64349640c5ce190cf2c24267e006bb80f066183e2f3fa9fe11864
+"zod@npm:^4.6.6":
+  version: 4.6.6
+  resolution: "zod@npm:4.6.6"
+  checksum: 9274ef2492f25549ade182f5142dff1093c7a9578152eb91a18d891f0b4a86445ac1b2dde37f457e749c1f8fba32f708a733c39017cf51a3bf18aebf294f5db6
   languageName: node
   linkType: hard
