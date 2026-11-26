@@ -41,7 +41,7 @@
     "@zwave-js/firmware-integrity": "^1.0.2",
     "ava": "^4.3.3",
     "comment-json": "^4.6.2",
-    "esbuild": "^0.15.7",
+    "esbuild": "^0.28.1",
     "esbuild-register": "^3.3.3",
     "eslint": "^9.35.0",
     "ky": "^1.10.0",
