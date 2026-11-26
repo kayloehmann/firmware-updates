@@ -1,4 +1,5 @@
 import test from "ava";
+import { ZodError } from "zod";
 import { ConditionalUpdateConfig } from "./config";
 
 test("Parse single config", async (t) => {
@@ -72,21 +73,15 @@ test("Parse single config with missing field in devices", async (t) => {
 		],
 	};
 
-	try {
-		new ConditionalUpdateConfig(definition);
-		t.fail("Expected error");
-	} catch (e: any) {
-		const msg = e.issues;
-		t.deepEqual(msg, [
-			{
-				code: "invalid_type",
-				expected: "string",
-				received: "undefined",
-				path: ["devices", 0, "brand"],
-				message: "Required",
-			},
-		]);
-	}
+	const error = t.throws(() => new ConditionalUpdateConfig(definition), {
+		instanceOf: ZodError,
+	});
+	t.is(error?.issues.length, 1);
+	t.like(error?.issues[0], {
+		code: "invalid_type",
+		expected: "string",
+		path: ["devices", 0, "brand"],
+	});
 });
 
 test("Parse single config with invalid URL", async (t) => {
@@ -121,19 +116,18 @@ test("Parse single config with invalid URL", async (t) => {
 		],
 	};
 
-	try {
-		new ConditionalUpdateConfig(definition);
-		t.fail("Expected error");
-	} catch (e: any) {
-		const msg = e.issues;
-		t.deepEqual(msg, [
-			{
-				code: "custom",
-				message: "Invalid url",
-				path: ["upgrades", 0, "url"],
-			},
-		]);
+	const error = t.throws(() => new ConditionalUpdateConfig(definition), {
+		instanceOf: ZodError,
+	});
+	const issue = error?.issues[0];
+	if (issue?.code !== "invalid_union") {
+		t.fail("Expected the upgrade union to report the invalid URL");
+		return;
 	}
+	t.deepEqual(issue.path, ["upgrades", 0]);
+	t.deepEqual(issue.errors[0], [
+		{ code: "custom", message: "Invalid url", path: ["url"] },
+	]);
 });
 
 test("Parse multi-file config with invalid hash", async (t) => {
@@ -179,20 +173,16 @@ test("Parse multi-file config with invalid hash", async (t) => {
 		],
 	};
 
-	try {
-		new ConditionalUpdateConfig(definition);
-		t.fail("Expected error");
-	} catch (e: any) {
-		const msg = e.issues;
-		t.deepEqual(msg, [
-			{
-				validation: "regex",
-				code: "invalid_string",
-				message: "Is not a supported hash",
-				path: ["upgrades", 0, "files", 1, "integrity"],
-			},
-		]);
-	}
+	const error = t.throws(() => new ConditionalUpdateConfig(definition), {
+		instanceOf: ZodError,
+	});
+	t.is(error?.issues.length, 1);
+	t.like(error?.issues[0], {
+		code: "invalid_format",
+		format: "regex",
+		message: "Is not a supported hash",
+		path: ["upgrades", 0, "files", 1, "integrity"],
+	});
 });
 
 test("Parse multi-file config with duplicate target", async (t) => {

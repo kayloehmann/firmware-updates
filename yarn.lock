@@ -1469,7 +1469,6 @@ __metadata:
     typescript-eslint: ^8.43.0
     wrangler: ^4.94.0
     zod: ^4.6.6
-    zod-to-json-schema: ^3.17.1
   languageName: unknown
   linkType: soft
 
@@ -5336,15 +5335,6 @@ __metadata:
     cookie: ^1.0.2
     youch-core: ^0.3.3
   checksum: ea9fa5f1d79dcf048d06242eecfe2ea8f3f7440d1f8a178a3d4a34ca870fbcb2716dd1f5edcc65ae16b1879eea74808cff5408d26fec96a64e3f583da082975f
-  languageName: node
-  linkType: hard
-
-"zod-to-json-schema@npm:^3.17.1":
-  version: 3.17.1
-  resolution: "zod-to-json-schema@npm:3.17.1"
-  peerDependencies:
-    zod: ^3.17.10
-  checksum: 2276398921376d52b41d96c318ddf6793c349adc3dd4e122e588915a732ebbacb4f6d1de91cf67473d93b50b097392141d6f0e529fb557b5fa72924f039004cb
   languageName: node
   linkType: hard
 
