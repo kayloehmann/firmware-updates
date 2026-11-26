@@ -41,6 +41,9 @@ jobs:
 
     - name: Run linter
       run: yarn run lint
+
+    - name: Check formatting
+      run: yarn format:check
     
     - name: Validate config files
       run: yarn check:configs

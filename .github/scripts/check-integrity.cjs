@@ -35,7 +35,7 @@ async function main(param) {
 					...context.repo,
 					issue_number: pull_number,
 				},
-				(response) => response.data
+				(response) => response.data,
 			);
 			// core.info("existing comments: " + JSON.stringify(existingComments));
 
@@ -68,7 +68,7 @@ async function main(param) {
 			...context.repo,
 			pull_number,
 		},
-		(response) => response.data
+		(response) => response.data,
 	);
 
 	// Whatever the difference between "modified" and "changed" is 🤷‍♂️
@@ -77,14 +77,14 @@ async function main(param) {
 			(file) =>
 				file.status === "added" ||
 				file.status === "modified" ||
-				file.status === "changed"
+				file.status === "changed",
 		)
 		.map((file) => file.filename)
 		.filter(
 			(filename) =>
 				filename.startsWith("firmwares/") &&
 				filename.endsWith(".json") &&
-				!path.basename(filename).startsWith("_")
+				!path.basename(filename).startsWith("_"),
 		);
 
 	if (filesToCheck.length === 0) {
@@ -102,7 +102,7 @@ async function main(param) {
 
 		// TODO: Reuse ConditionalUpdateConfig for parsing
 		const { upgrades } = JSON5.parse(
-			await fs.readFile(filenameFull, "utf-8")
+			await fs.readFile(filenameFull, "utf-8"),
 		);
 
 		for (const upgrade of upgrades) {
@@ -131,7 +131,7 @@ async function main(param) {
 					errors.push(
 						`${errorPrefix}
 Failed to download ${url}
-${e.message}`
+${e.message}`,
 					);
 					core.error(errors[errors.length - 1]);
 					continue;
@@ -145,7 +145,7 @@ ${e.message}`
 					errors.push(
 						`${errorPrefix}
 Failed to generate integrity hash
-${e.message}`
+${e.message}`,
 					);
 					core.error(errors[errors.length - 1]);
 					continue;
@@ -158,7 +158,7 @@ Integrity hash mismatch
 \`\`\`diff
 Expected: ${integrity}
 Got:      ${hash}
-\`\`\``
+\`\`\``,
 					);
 					core.error(errors[errors.length - 1]);
 					continue;

@@ -17,11 +17,7 @@ export default async function main({
 	const pr = context.payload.pull_request;
 	const owner = context.repo.owner;
 	const repo = context.repo.repo;
-	const issueNumber = getSubmissionIssueNumberFromPR(
-		pr,
-		owner,
-		repo,
-	);
+	const issueNumber = getSubmissionIssueNumberFromPR(pr, owner, repo);
 	if (issueNumber == null) return;
 
 	let currentLabels: string[];

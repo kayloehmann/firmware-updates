@@ -18,7 +18,7 @@ export function build() {
 				headers: {
 					"Content-Type": "text/html",
 				},
-			}
+			},
 		);
 	});
 

@@ -36,7 +36,7 @@ async function main(param) {
 	if (review.state === "APPROVED") {
 		// Add label to PR
 		github.log.info(
-			`PR was approved by a manufacturer, adding official label`
+			`PR was approved by a manufacturer, adding official label`,
 		);
 		await github.rest.issues.addLabels({
 			...options,

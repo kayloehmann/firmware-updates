@@ -14,23 +14,11 @@
 const fs = require("fs");
 const path = require("path");
 const JSON5 = require("json5");
-const prettier = require("prettier");
-
-async function formatOne(raw, prettierConfig) {
-	const normalized = raw.trim().replace(/\r\n/g, "\n");
-	try {
-		const out = await prettier.format(normalized, {
-			...prettierConfig,
-			parser: "markdown",
-		});
-		return out.trim();
-	} catch {
-		return normalized;
-	}
-}
+const {
+	formatChangelog,
+} = require("../../../.github/scripts/firmware-submission/format.cjs");
 
 async function processFile(absPath) {
-	const cfg = (await prettier.resolveConfig(absPath)) ?? {};
 	const raw = fs.readFileSync(absPath, "utf8");
 	const parsed = JSON5.parse(raw);
 	const upgrades = parsed.upgrades ?? [];
@@ -38,7 +26,7 @@ async function processFile(absPath) {
 	for (let i = 0; i < upgrades.length; i++) {
 		const u = upgrades[i];
 		if (typeof u.changelog !== "string") continue;
-		const formatted = await formatOne(u.changelog, cfg);
+		const formatted = formatChangelog(u.changelog);
 		if (formatted !== u.changelog) {
 			if (!anyDiff) {
 				console.log(`\n### ${absPath}`);

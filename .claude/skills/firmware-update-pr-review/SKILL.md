@@ -1,4 +1,5 @@
 ---
+
 name: firmware-update-pr-review
 description: Use this skill when reviewing any pull request against the zwave-js/firmware-updates repo that touches firmware definition files (`firmwares/<vendor>/*.json`), regardless of author. Covers title normalization, changelog formatting via the submission pipeline (prettier markdown, style-preserving), fixing typos and indentation, and pushing fixups back to the PR's branch.
 ---
@@ -8,6 +9,7 @@ description: Use this skill when reviewing any pull request against the zwave-js
 ## Overview
 
 PRs that add or modify `firmwares/<vendor>/*.json` often arrive with:
+
 - Non-canonical titles (missing vendor, `.json` suffix, unusual phrasing)
 - Changelogs with stray whitespace or malformed bullets
 - Typos in text fields
@@ -33,9 +35,9 @@ The title should carry these pieces of information, in this order:
 1. **Verb** — `Add` when the PR introduces a new file or a new upgrade entry; `Update` when it only modifies an existing entry in place.
 2. **Vendor / brand / manufacturer** — `Zooz`, `Shelly`, `Aeotec`, `Leviton`, etc. Always present; read it from the JSON's `devices[].brand` if unclear.
 3. **Model** — bare model ID plus any variant suffixes from the filename (e.g. `ZEN71-V04-800-LR`, `ZSE42-V02`). Keep the suffix so the variant stays identifiable. Never include the `.json` extension.
-4. **Region(s)** — *optional* when the device supports only one region; the region is obvious from the body in that case. When present, use a consistent format: `US`, `EU`, `US and EU`, `US / AUS / EU` (slash-separated for 3+ regions, space-padded).
-5. **Added firmware version(s)** — *optional* when the PR touches multiple devices, since listing them all makes the title unreadable. Either `1.30` or `1.30.0` is fine; keep all three parts when the patch is non-zero (`1.30.1` stays `1.30.1`). Spell as `firmware <V>` normally; contract to `FW <V>` when the title is otherwise too long.
-6. **Channel** — *optional* and only called out when the upgrade's `channel` is not the default `stable`. For `beta` entries, prefix the word `firmware` with the channel: `beta firmware <V>`. Omit for `stable` (it's the default and adding it just adds noise).
+4. **Region(s)** — _optional_ when the device supports only one region; the region is obvious from the body in that case. When present, use a consistent format: `US`, `EU`, `US and EU`, `US / AUS / EU` (slash-separated for 3+ regions, space-padded).
+5. **Added firmware version(s)** — _optional_ when the PR touches multiple devices, since listing them all makes the title unreadable. Either `1.30` or `1.30.0` is fine; keep all three parts when the patch is non-zero (`1.30.1` stays `1.30.1`). Spell as `firmware <V>` normally; contract to `FW <V>` when the title is otherwise too long.
+6. **Channel** — _optional_ and only called out when the upgrade's `channel` is not the default `stable`. For `beta` entries, prefix the word `firmware` with the channel: `beta firmware <V>`. Omit for `stable` (it's the default and adding it just adds noise).
 
 Typical shapes:
 
@@ -96,15 +98,7 @@ If you spot typos in **unrelated** changelogs (entries the PR didn't touch) whil
 
 #### Pipeline reference
 
-The submission workflow runs this transformation (see `.github/scripts/firmware-submission/process-submission.mts:1782-1794`):
-
-```
-raw.trim().replace(/\r\n/g, "\n")
-  → prettier.format(text, { ...resolvedConfig, parser: "markdown" })
-  → .trim()
-```
-
-Resolved prettier config at the repo root: tabs width 4, printWidth 80, endOfLine `lf`.
+The submission workflow calls `formatChangelog` in `.github/scripts/firmware-submission/format.cjs`. The helper trims the input, normalizes line endings to LF, formats the text as Markdown with Biome, and trims the output. If formatting fails, the helper returns the normalized input.
 
 #### Extract the in-scope changelogs
 
@@ -112,7 +106,7 @@ Only changelog strings that appear on the **+** side of the PR diff (new entries
 
 #### Run the pipeline (dry-run)
 
-Use the bundled helper; it resolves prettier from the repo's `node_modules` and prints a diff per changelog that would change:
+Use the bundled helper; it uses the same Biome helper as the submission workflow and prints a diff per changelog that would change:
 
 ```bash
 node .claude/skills/firmware-update-pr-review/format-changelogs.cjs \
@@ -123,18 +117,7 @@ Pass the file(s) the PR touches. The script parses each one with JSON5, walks th
 
 #### Style decision
 
-Prettier's markdown parser makes two stylistic changes:
-
-1. **Bullet char flip (`*` → `-`)**
-2. **Blank line inserted between intro prose and the first bullet**
-
-Default preference: **the prettier output**. Apply it to new files or when the surrounding changelogs in the same file already match prettier output.
-
-Exception: when the rest of the file uses `*` bullets and no blank-line-before-list, keep consistent with the file. Changing half a file's changelogs to `-` while the rest stays `*` is worse than either consistent style.
-
-So: decide per-file by reading the other (unchanged) changelogs in the same JSON. Match what's there.
-
-Regardless of the style decision, genuine normalizations (trimmed stray whitespace, fixed malformed bullets, escape-fix for bad markdown) are always worth committing.
+Use Biome's output for new entries. When reviewing changes to an existing file, keep the bullet style consistent with its unchanged entries. Correct stray whitespace and malformed bullets separately from any stylistic changes.
 
 #### Splitting prose into bullets
 
@@ -153,7 +136,7 @@ Mechanics:
 
 - **Trailing space before `\n`**: `"…2.50. \n* Updated"` → `"…2.50.\n* Updated"`
 - **Stray leading space on a bullet**: `"\n * Improved"` → `"\n* Improved"`
-- **Malformed bullet (space-asterisk-no-space)**: `"\n *Fixed"` — prettier would escape this to `\*Fixed`, which is wrong. Manually rewrite as `"\n* Fixed"` before considering the pipeline done.
+- **Malformed bullet (space-asterisk-no-space)**: `"\n *Fixed"` — a formatter may escape this to `\*Fixed`, which is wrong. Manually rewrite as `"\n* Fixed"` before considering the pipeline done.
 
 ## Step 4: Commit and push
 

@@ -60,32 +60,32 @@ The `firmwareVersion` field may also contain a patch version, e.g. `1.6.1`. When
 
 ```json
 [
-    {
-        "version": "1.5",
-        "changelog": "* Initial release",
-        "files": [
-            {
-                "target": 0,
-                "integrity": "sha256:45d004e1b5997a053f1de40753d19fc534fd657080810cfb697b868a3cf0e764",
-                "url": "https://example.com/firmware/1.5.otz"
-            }
-        ],
-        "downgrade": true,
-        "normalizedVersion": "1.5.0"
-    },
-    {
-        "version": "1.7",
-        "changelog": "* Fixed some bugs\n*Added more bugs",
-        "files": [
-            {
-                "target": 0,
-                "integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
-                "url": "https://example.com/firmware/1.7.otz"
-            }
-        ],
-        "downgrade": false,
-        "normalizedVersion": "1.7.0"
-    }
+	{
+		"version": "1.5",
+		"changelog": "* Initial release",
+		"files": [
+			{
+				"target": 0,
+				"integrity": "sha256:45d004e1b5997a053f1de40753d19fc534fd657080810cfb697b868a3cf0e764",
+				"url": "https://example.com/firmware/1.5.otz"
+			}
+		],
+		"downgrade": true,
+		"normalizedVersion": "1.5.0"
+	},
+	{
+		"version": "1.7",
+		"changelog": "* Fixed some bugs\n*Added more bugs",
+		"files": [
+			{
+				"target": 0,
+				"integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
+				"url": "https://example.com/firmware/1.7.otz"
+			}
+		],
+		"downgrade": false,
+		"normalizedVersion": "1.7.0"
+	}
 ]
 ```
 
@@ -104,15 +104,15 @@ To help applications decide which updates to show and how, additional fields are
 
 ```ts
 type APIv1_Response = {
-    version: string;
-    changelog: string;
-    files: {
-        target: number;
-        url: string;
-        integrity: string;
-    }[];
-    downgrade: boolean;
-    normalizedVersion: string;
+	version: string;
+	changelog: string;
+	files: {
+		target: number;
+		url: string;
+		integrity: string;
+	}[];
+	downgrade: boolean;
+	normalizedVersion: string;
 }[];
 ```
 
@@ -148,34 +148,34 @@ Changes compared to v1:
 
 ```json
 [
-    {
-        "version": "1.7",
-        "changelog": "* Fixed some bugs\n*Added more bugs",
-        "channel": "stable",
-        "files": [
-            {
-                "target": 0,
-                "integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
-                "url": "https://example.com/firmware/1.7.otz"
-            }
-        ],
-        "downgrade": false,
-        "normalizedVersion": "1.7.0"
-    },
-    {
-        "version": "1.8",
-        "changelog": "* Fixed some bugs\n*Added more bugs",
-        "channel": "beta",
-        "files": [
-            {
-                "target": 0,
-                "integrity": "sha256:833f9eea2328cb05cbddc00b482e73225a09ca15dc8f90060e8b58ed9aa83a99",
-                "url": "https://example.com/firmware/1.8.otz"
-            }
-        ],
-        "downgrade": false,
-        "normalizedVersion": "1.8.0-beta"
-    }
+	{
+		"version": "1.7",
+		"changelog": "* Fixed some bugs\n*Added more bugs",
+		"channel": "stable",
+		"files": [
+			{
+				"target": 0,
+				"integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
+				"url": "https://example.com/firmware/1.7.otz"
+			}
+		],
+		"downgrade": false,
+		"normalizedVersion": "1.7.0"
+	},
+	{
+		"version": "1.8",
+		"changelog": "* Fixed some bugs\n*Added more bugs",
+		"channel": "beta",
+		"files": [
+			{
+				"target": 0,
+				"integrity": "sha256:833f9eea2328cb05cbddc00b482e73225a09ca15dc8f90060e8b58ed9aa83a99",
+				"url": "https://example.com/firmware/1.8.otz"
+			}
+		],
+		"downgrade": false,
+		"normalizedVersion": "1.8.0-beta"
+	}
 ]
 ```
 
@@ -183,16 +183,16 @@ Changes compared to v1:
 
 ```ts
 type APIv2_Response = {
-    version: string;
-    changelog: string;
-    channel: "stable" | "beta";
-    files: {
-        target: number;
-        url: string;
-        integrity: string;
-    }[];
-    downgrade: boolean;
-    normalizedVersion: string;
+	version: string;
+	changelog: string;
+	channel: "stable" | "beta";
+	files: {
+		target: number;
+		url: string;
+		integrity: string;
+	}[];
+	downgrade: boolean;
+	normalizedVersion: string;
 }[];
 ```
 
@@ -238,21 +238,21 @@ Previous API versions will ignore the `region` field in the request and will not
 
 ```json
 [
-    {
-        "version": "1.7",
-        "changelog": "EU Version:\n* Fixed some bugs\n*Added more bugs",
-        "channel": "stable",
-        "files": [
-            {
-                "target": 0,
-                "integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
-                "url": "https://example.com/firmware/1.7-eu.otz"
-            }
-        ],
-        "downgrade": false,
-        "normalizedVersion": "1.7.0",
-        "region": "europe"
-    }
+	{
+		"version": "1.7",
+		"changelog": "EU Version:\n* Fixed some bugs\n*Added more bugs",
+		"channel": "stable",
+		"files": [
+			{
+				"target": 0,
+				"integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
+				"url": "https://example.com/firmware/1.7-eu.otz"
+			}
+		],
+		"downgrade": false,
+		"normalizedVersion": "1.7.0",
+		"region": "europe"
+	}
 ]
 ```
 
@@ -260,27 +260,27 @@ Previous API versions will ignore the `region` field in the request and will not
 
 ```ts
 type APIv3_Response = {
-    version: string;
-    changelog: string;
-    channel: "stable" | "beta";
-    region?:
-        | "europe"
-        | "usa"
-        | "australia/new zealand"
-        | "hong kong"
-        | "india"
-        | "israel"
-        | "russia"
-        | "china"
-        | "japan"
-        | "korea";
-    files: {
-        target: number;
-        url: string;
-        integrity: string;
-    }[];
-    downgrade: boolean;
-    normalizedVersion: string;
+	version: string;
+	changelog: string;
+	channel: "stable" | "beta";
+	region?:
+		| "europe"
+		| "usa"
+		| "australia/new zealand"
+		| "hong kong"
+		| "india"
+		| "israel"
+		| "russia"
+		| "china"
+		| "japan"
+		| "korea";
+	files: {
+		target: number;
+		url: string;
+		integrity: string;
+	}[];
+	downgrade: boolean;
+	normalizedVersion: string;
 }[];
 ```
 
@@ -324,36 +324,36 @@ The response contains an array of unique devices from the request. Duplicates ar
 
 ```json
 [
-    {
-        "manufacturerId": "0x1234",
-        "productType": "0xabcd",
-        "productId": "0xcafe",
-        "firmwareVersion": "1.6",
-        "updates": [
-            {
-                "version": "1.7",
-                "changelog": "EU Version:\n* Fixed some bugs\n*Added more bugs",
-                "channel": "stable",
-                "files": [
-                    {
-                        "target": 0,
-                        "integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
-                        "url": "https://example.com/firmware/1.7-eu.otz"
-                    }
-                ],
-                "downgrade": false,
-                "normalizedVersion": "1.7.0",
-                "region": "europe"
-            }
-        ]
-    },
-    {
-        "manufacturerId": "0x5678",
-        "productType": "0xdef0",
-        "productId": "0x1234",
-        "firmwareVersion": "2.3",
-        "updates": []
-    }
+	{
+		"manufacturerId": "0x1234",
+		"productType": "0xabcd",
+		"productId": "0xcafe",
+		"firmwareVersion": "1.6",
+		"updates": [
+			{
+				"version": "1.7",
+				"changelog": "EU Version:\n* Fixed some bugs\n*Added more bugs",
+				"channel": "stable",
+				"files": [
+					{
+						"target": 0,
+						"integrity": "sha256:cd19da525f20096a817197bf263f3fdbe6485f00ec7354b691171358ebb9f1a1",
+						"url": "https://example.com/firmware/1.7-eu.otz"
+					}
+				],
+				"downgrade": false,
+				"normalizedVersion": "1.7.0",
+				"region": "europe"
+			}
+		]
+	},
+	{
+		"manufacturerId": "0x5678",
+		"productType": "0xdef0",
+		"productId": "0x1234",
+		"firmwareVersion": "2.3",
+		"updates": []
+	}
 ]
 ```
 
@@ -361,33 +361,33 @@ The response contains an array of unique devices from the request. Duplicates ar
 
 ```ts
 type APIv4_Response = {
-    manufacturerId: string;
-    productType: string;
-    productId: string;
-    firmwareVersion: string;
-    updates: {
-        version: string;
-        changelog: string;
-        channel: "stable" | "beta";
-        region?:
-            | "europe"
-            | "usa"
-            | "australia/new zealand"
-            | "hong kong"
-            | "india"
-            | "israel"
-            | "russia"
-            | "china"
-            | "japan"
-            | "korea";
-        files: {
-            target: number;
-            url: string;
-            integrity: string;
-        }[];
-        downgrade: boolean;
-        normalizedVersion: string;
-    }[];
+	manufacturerId: string;
+	productType: string;
+	productId: string;
+	firmwareVersion: string;
+	updates: {
+		version: string;
+		changelog: string;
+		channel: "stable" | "beta";
+		region?:
+			| "europe"
+			| "usa"
+			| "australia/new zealand"
+			| "hong kong"
+			| "india"
+			| "israel"
+			| "russia"
+			| "china"
+			| "japan"
+			| "korea";
+		files: {
+			target: number;
+			url: string;
+			integrity: string;
+		}[];
+		downgrade: boolean;
+		normalizedVersion: string;
+	}[];
 }[];
 ```
 

@@ -13,10 +13,11 @@ export async function minimizeExistingStatusComments(
 	repo: string,
 	issueNumber: number,
 ): Promise<void> {
-	const comments = await octokit.paginate(
-		octokit.rest.issues.listComments,
-		{ owner, repo, issue_number: issueNumber },
-	);
+	const comments = await octokit.paginate(octokit.rest.issues.listComments, {
+		owner,
+		repo,
+		issue_number: issueNumber,
+	});
 
 	const statusComments = comments.filter(
 		(comment) =>
@@ -25,8 +26,8 @@ export async function minimizeExistingStatusComments(
 	);
 
 	console.log(
-		`Found ${statusComments.length} status comment(s) to minimize`
-		+ ` (out of ${comments.length} total).`,
+		`Found ${statusComments.length} status comment(s) to minimize` +
+			` (out of ${comments.length} total).`,
 	);
 
 	for (const comment of statusComments) {
@@ -108,8 +109,9 @@ export function getSubmissionIssueNumberFromPR(
 		return null;
 	}
 
-	const generatedMatch = body.match(/Auto-generated from issue #(\d+)\./)
-		?? body.match(/<!-- Auto-generated from issue #(\d+)\. -->/);
+	const generatedMatch =
+		body.match(/Auto-generated from issue #(\d+)\./) ??
+		body.match(/<!-- Auto-generated from issue #(\d+)\. -->/);
 	if (
 		generatedMatch &&
 		Number.parseInt(generatedMatch[1]!, 10) !== issueNumber
