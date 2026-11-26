@@ -9,13 +9,14 @@ import { spawnSync } from "node:child_process";
 import * as fs from "node:fs";
 import * as path from "node:path";
 import { fileURLToPath } from "node:url";
-import prettier from "prettier";
 import semver from "semver";
 import type { GitHubScriptContext } from "../types.mts";
 import {
 	createSubmissionPRBody,
 	postStatusComment as postStatusCommentShared,
 } from "./submission-pr.mts";
+
+import { formatChangelog, formatWithBiome } from "./format.cjs";
 
 const { getOctokit } = githubActions;
 
@@ -491,17 +492,6 @@ export function insertUpgradesToFirmwareConfigText(
 	return `${stringifyCommentJson(config, null, "\t")}\n`;
 }
 
-export async function formatWithPrettier(
-	text: string,
-	parser: string,
-	prettierConfig: Record<string, any> = {},
-): Promise<string> {
-	return prettier.format(text, {
-		...prettierConfig,
-		parser,
-	});
-}
-
 function chooseExistingDirectory(
 	candidates: string[],
 	preferredDirectory: string,
@@ -875,9 +865,7 @@ function validateUrl(
 	return true;
 }
 
-function getGitHubHostedFirmwareLocation(
-	value: string,
-):
+function getGitHubHostedFirmwareLocation(value: string):
 	| {
 			owner: string;
 			repo: string;
@@ -922,10 +910,10 @@ function getGitHubHostedFirmwareLocation(
 
 function getGitHubApiErrorStatus(error: unknown): number | undefined {
 	if (
-		typeof error === "object"
-		&& error != null
-		&& "status" in error
-		&& typeof error.status === "number"
+		typeof error === "object" &&
+		error != null &&
+		"status" in error &&
+		typeof error.status === "number"
 	) {
 		return error.status;
 	}
@@ -986,8 +974,8 @@ export async function resolveGitHubFirmwarePermalink(
 	// `/`, so there's no ambiguity and no API call needed — just rebuild as a
 	// canonical raw URL.
 	if (
-		decodedSegments.length >= 2
-		&& COMMIT_SHA_REGEX.test(decodedSegments[0]!)
+		decodedSegments.length >= 2 &&
+		COMMIT_SHA_REGEX.test(decodedSegments[0]!)
 	) {
 		return buildRawPermalink(
 			location.owner,
@@ -1924,9 +1912,7 @@ export default async function main({
 
 				if (resolvedUrl !== file.url) {
 					if (!announcedResolution) {
-						console.log(
-							"Resolving GitHub-hosted firmware URLs...",
-						);
+						console.log("Resolving GitHub-hosted firmware URLs...");
 						announcedResolution = true;
 					}
 					console.log(`  Resolved ${file.url} -> ${resolvedUrl}`);
@@ -1975,22 +1961,9 @@ export default async function main({
 			upgradeHashes.push(hashes);
 		}
 
-		const prettierConfig =
-			(await prettier.resolveConfig(absoluteFilePath)) ?? {};
-		const formattedChangelogs: string[] = [];
-		for (const upgrade of normalizedUpgradeFormData) {
-			const raw = upgrade.changelog.trim().replace(/\r\n/g, "\n");
-			try {
-				const formatted = await formatWithPrettier(
-					raw,
-					"markdown",
-					prettierConfig,
-				);
-				formattedChangelogs.push(formatted.trim());
-			} catch {
-				formattedChangelogs.push(raw);
-			}
-		}
+		const formattedChangelogs = normalizedUpgradeFormData.map((upgrade) =>
+			formatChangelog(upgrade.changelog),
+		);
 
 		const newUpgrades = normalizedUpgradeFormData.map((upgrade, index) => {
 			const hashes = upgradeHashes[index]!;
@@ -2047,10 +2020,9 @@ export default async function main({
 					null,
 					"\t",
 				)}\n`;
-		const formattedConfigText = await formatWithPrettier(
+		const formattedConfigText = formatWithBiome(
 			configText,
-			"json",
-			prettierConfig,
+			"firmware.json",
 		);
 
 		console.log(

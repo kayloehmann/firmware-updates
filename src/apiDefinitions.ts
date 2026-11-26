@@ -24,7 +24,7 @@ export const APIv1v2_RequestSchema = z.object({
 export const APIv3_RequestSchema = APIv1v2_RequestSchema.merge(
 	z.object({
 		region: regionSchema.optional(),
-	})
+	}),
 );
 
 /** The request schema for API version 4 */

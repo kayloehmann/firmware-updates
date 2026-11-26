@@ -17,7 +17,7 @@ export default {
 	async fetch(
 		request: Request,
 		env: CloudflareEnvironment,
-		context: ExecutionContext
+		context: ExecutionContext,
 	): Promise<Response> {
 		env = { ...env, responseHeaders: {} };
 		const resp: Response = await router.fetch(request, env, context);

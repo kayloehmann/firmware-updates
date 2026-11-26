@@ -2,7 +2,7 @@
 	"typescript.tsdk": "node_modules/typescript/lib",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"editor.formatOnSave": true,
-	"editor.defaultFormatter": "esbenp.prettier-vscode",
+	"editor.defaultFormatter": "biomejs.biome",
 	"eslint.validate": [
 		"javascript",
 		"javascriptreact",
@@ -10,7 +10,7 @@
 		"typescriptreact"
 	],
 	"[jsonc]": {
-		"editor.defaultFormatter": "esbenp.prettier-vscode"
+		"editor.defaultFormatter": "biomejs.biome"
 	},
 	"files.associations": {
 		"**/firmwares/**/*.json": "jsonc"
@@ -25,7 +25,6 @@
 		"yarn check": true,
 		"yarn lint": true,
 		"yarn test": true,
-		"yarn prettier -w": true,
 		"yarn tsc --noEmit": true,
 		"rm": false,
 		"rmdir": false,
@@ -36,6 +35,7 @@
 		"eval": false,
 		"chmod": false,
 		"chown": false,
-		"/^Remove-Item\\b/i": false
+		"/^Remove-Item\\b/i": false,
+		"yarn format": true
 	}
 }

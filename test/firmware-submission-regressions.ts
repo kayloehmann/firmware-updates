@@ -1,4 +1,5 @@
 import test from "ava";
+import { formatWithBiome } from "../.github/scripts/firmware-submission/format.cjs";
 import JSON5 from "json5";
 import { readFile } from "node:fs/promises";
 
@@ -22,7 +23,6 @@ const {
 	extractIssueTemplateFieldHeadings,
 	findDuplicateTargets,
 	findDuplicateUpgradeVariants,
-	formatWithPrettier,
 	getApprovalInvalidReason,
 	parseIssueBody,
 	parseUpgradeFilesFromSections,
@@ -684,7 +684,9 @@ test("resolveGitHubFirmwarePermalink converts blob URLs on named branches to raw
 					if (ref === "main" && path === "dir/fw.otz") {
 						return { data: { type: "file" } };
 					}
-					throw Object.assign(new Error("Not Found"), { status: 404 });
+					throw Object.assign(new Error("Not Found"), {
+						status: 404,
+					});
 				},
 				getCommit: async ({
 					owner,
@@ -698,7 +700,11 @@ test("resolveGitHubFirmwarePermalink converts blob URLs on named branches to raw
 					t.is(owner, "InovelliUSA");
 					t.is(repo, "Firmware");
 					t.is(ref, "main");
-					return { data: { sha: "ec05e86280e6d6632537346c744584c3c135e5e2" } };
+					return {
+						data: {
+							sha: "ec05e86280e6d6632537346c744584c3c135e5e2",
+						},
+					};
 				},
 			},
 		},
@@ -731,11 +737,17 @@ test("resolveGitHubFirmwarePermalink handles refs with slashes in raw.githubuser
 					if (ref === "release/v1" && path === "firmwares/fw.bin") {
 						return { data: { type: "file" } };
 					}
-					throw Object.assign(new Error("Not Found"), { status: 404 });
+					throw Object.assign(new Error("Not Found"), {
+						status: 404,
+					});
 				},
 				getCommit: async ({ ref }: { ref: string }) => {
 					t.is(ref, "release/v1");
-					return { data: { sha: "0123456789abcdef0123456789abcdef01234567" } };
+					return {
+						data: {
+							sha: "0123456789abcdef0123456789abcdef01234567",
+						},
+					};
 				},
 			},
 		},
@@ -782,11 +794,17 @@ test("resolveGitHubFirmwarePermalink prefers longest ref when a shorter one also
 					if (ref === "release" && path === "v1/firmwares/fw.bin") {
 						return { data: { type: "file" } };
 					}
-					throw Object.assign(new Error("Not Found"), { status: 404 });
+					throw Object.assign(new Error("Not Found"), {
+						status: 404,
+					});
 				},
 				getCommit: async ({ ref }: { ref: string }) => {
 					t.is(ref, "release/v1");
-					return { data: { sha: "abcdefabcdefabcdefabcdefabcdefabcdefabcd" } };
+					return {
+						data: {
+							sha: "abcdefabcdefabcdefabcdefabcdefabcdefabcd",
+						},
+					};
 				},
 			},
 		},
@@ -812,11 +830,15 @@ test("resolveGitHubFirmwarePermalink returns non-GitHub URLs unchanged without A
 		rest: {
 			repos: {
 				getContent: async () => {
-					t.fail("getContent should not be called for non-GitHub URLs");
+					t.fail(
+						"getContent should not be called for non-GitHub URLs",
+					);
 					throw new Error("unreachable");
 				},
 				getCommit: async () => {
-					t.fail("getCommit should not be called for non-GitHub URLs");
+					t.fail(
+						"getCommit should not be called for non-GitHub URLs",
+					);
 					throw new Error("unreachable");
 				},
 			},
@@ -839,11 +861,15 @@ test("resolveGitHubFirmwarePermalink short-circuits URLs already pinned to a com
 		rest: {
 			repos: {
 				getContent: async () => {
-					t.fail("getContent should not be called for SHA-pinned URLs");
+					t.fail(
+						"getContent should not be called for SHA-pinned URLs",
+					);
 					throw new Error("unreachable");
 				},
 				getCommit: async () => {
-					t.fail("getCommit should not be called for SHA-pinned URLs");
+					t.fail(
+						"getCommit should not be called for SHA-pinned URLs",
+					);
 					throw new Error("unreachable");
 				},
 			},
@@ -883,10 +909,14 @@ test("resolveGitHubFirmwarePermalink throws SubmissionValidationError when no re
 		rest: {
 			repos: {
 				getContent: async () => {
-					throw Object.assign(new Error("Not Found"), { status: 404 });
+					throw Object.assign(new Error("Not Found"), {
+						status: 404,
+					});
 				},
 				getCommit: async () => {
-					t.fail("getCommit should not be called when no split resolves");
+					t.fail(
+						"getCommit should not be called when no split resolves",
+					);
 					throw new Error("unreachable");
 				},
 			},
@@ -916,11 +946,17 @@ test("resolveGitHubFirmwarePermalink decodes percent-encoded path segments and r
 					if (ref === "main" && path === "dir with space/fw+1.bin") {
 						return { data: { type: "file" } };
 					}
-					throw Object.assign(new Error("Not Found"), { status: 404 });
+					throw Object.assign(new Error("Not Found"), {
+						status: 404,
+					});
 				},
 				getCommit: async ({ ref }: { ref: string }) => {
 					t.is(ref, "main");
-					return { data: { sha: "1111111111111111111111111111111111111111" } };
+					return {
+						data: {
+							sha: "1111111111111111111111111111111111111111",
+						},
+					};
 				},
 			},
 		},
@@ -992,7 +1028,7 @@ test("insertUpgradesToFirmwareConfigText preserves existing JSONC comments after
 }
 `;
 
-	const updatedConfig = await formatWithPrettier(
+	const updatedConfig = formatWithBiome(
 		insertUpgradesToFirmwareConfigText(existingConfig, [
 			createUpgradeEntry({
 				version: "1.61",
@@ -1010,12 +1046,7 @@ test("insertUpgradesToFirmwareConfigText preserves existing JSONC comments after
 				],
 			}),
 		]),
-		"jsonc",
-		{
-			endOfLine: "lf",
-			tabWidth: 4,
-			useTabs: true,
-		},
+		"firmware.json",
 	);
 
 	t.true(updatedConfig.includes("// existing model comment"));
