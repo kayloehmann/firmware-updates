@@ -63,11 +63,12 @@ jobs:
           return script({github, context, core});
 
   # ===================
-  # Deploys successful builds on the main branch to Cloudflare
+  # Forks with their own Cloudflare credentials can opt in to deployment.
   deploy:
     if: |
       github.event_name == 'push' &&
-      github.ref == 'refs/heads/main'
+      github.ref == 'refs/heads/main' &&
+      (github.repository == 'zwave-js/firmware-updates' || vars.DEPLOY_FIRMWARE_WORKER == 'true')
 
     needs: [test]
 
